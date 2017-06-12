@@ -1,37 +1,32 @@
-var plantillaPokemons = '<div class="col s6 m3" data-url="http://pokeapi.co/api/v2/pokemon-species/__numero-pokemon__/">' +
+var plantillaPokemons =   '<div class="container">'+
+                          '<div class="row"'+
+                          '<div class="col s6 m3 personaje" data-url="http://pokeapi.co/api/v2/pokemon-species/__numero-pokemon__/">' +
                           '<div class="card hoverable pokemones">' +
                           '<div class= "card-content center-align">' +
-                          '<img class="responsive-img center" src="assets/img/__nombre-pokemon__.png" alt="img-pokemon">' +
-                           '<h6><a href="#modal-__nombre-modal__">__nombre__</a></h6>' +
+                          '<img class="responsive-img center img-pokemon" src="assets/img/__nombre-pokemon__.png" alt="img-pokemon" >' +
+                           '<h6><a href="#modal1" class="nombre-pokemon">__nombre__</a></h6>' +
                            '</div>' +
                            '</div>' +
+                           '</div>'+
+                           '</div>'+
                            '</div>';
-
-var plantillaModal = '<div class="modal-content">'+
-                    		'<div class="col s12 m7">'+
-                    			 '<h2 class="header">__pokemon__</h2>'+
-                    			 ' <div class="card horizontal">'+
-                    				 '<div class="card-image  ">'+
-                    					'<img src="__pokemonImagen__" class="imagenModal responsive-img circle">'+
-                    				 '</div>'+
-                    				 '<div class="card-stacked">'+
-                    					 	'<div class="card-content row">'+
-                    						 '<p class="col s6">color:__color__</p>'+
-                    						 '<p class="col s6">habitat:__habitat__</p>'+
-                    						 '<p class="col s6">shape:__shape__</p>'+
-                    						 '<p class="col s6">generacion:__generacion__</p>'
-                    					 '</div>'+
-                    				 '</div>'+
-                    			 '</div>'+
-                    		 '</div>'+
-                    '</div>';
-
+var imagenes = [
+  'public/assets/img/beedrill.png','public/assets/ismg/blastoise.png','public/assets/img/bulbasaur.png',
+  'public/assets/img/butterfree.png','public/assets/img/caterpie.png','public/assets/img/charizard.png',
+  'public/assets/img/charmander.png', 'public/assets/img/charmeleon.png','public/assets/img/ivysaur.png',
+  'public/assets/img/kakuna.png','public/assets/img/metapod.png','public/assets/img/pidgeot.png',
+  'public/assets/img/pidgey.png','public/assets/img/pidgeotto.png','public/assets/img/raticate.png',
+  'public/assets/img/rattata.png','public/assets/img/squirtle.png','public/assets/img/venusaur.png',
+  'public/assets/img/wartortle.png','public/assets/img/weedle.png'
+];
 var cargarPagina = function () {
 	$('.btn-floating').sideNav();
+  $('.modal').modal();
 
 	$.getJSON("//pokeapi.co/api/v2/pokemon/", function (response) {
 		var pokemons = response.results;
 		crearPokemons(pokemons);
+    $(document).on("click",".personaje",datos);
 	});
 
 };
@@ -39,54 +34,40 @@ var cargarPagina = function () {
 var crearPokemons = function(pokemons){
   var plantillaFinalPokemons = "";
     pokemons.forEach( function (pokemon, index) {
-		plantillaFinalPokemons += plantillaPokemons.replace("__nombre__", pokemon.name).replace("__nombre-pokemon__", pokemon.name).replace("__nombre-moda__", pokemon.name).replace("__numero-pokemon__", index+1).replace("__nombre-modal__",pokemon.name);
+		plantillaFinalPokemons += plantillaPokemons.replace("__nombre__", pokemon.name)
+    .replace("__nombre-pokemon__", pokemon.name)
+    .replace("__nombre-modal__", pokemon.name)
+    .replace("__numero-pokemon__", index+1)
+    .replace("__nombre-modal__",pokemon.name);
 
 	});
 
-	$("lista-pokemones").html(plantillaFinalPokemons);
+	$("#lista-pokemones").html(plantillaFinalPokemons);
 
 }
 
+var datos = function(){
+  var url = ($(this).data("url"));
+  console.log($(this));
+  var nombrePokemon = $(this).text();
+  $.getJSON(url, function(response){
+    var pokemonColor = response.color.name;
+    var pokemonHabitat = response.habitat.name;
+    var pokemonShape = response.shape.name;
+    var pokemonGeneracion = response.genera[0].genus;
 
-// var obtenerDatos = function(pokemon,imagen){
-//
-// 	 var nombre = pokemon.names[0].name;
-// 	 var color = pokemon.color.name;
-// 	 var habitat = pokemon.habitat.name;
-// 	 var forma = pokemon.shape.name;
-// 	 var generacion = pokemon.generation.name;
-// 	 var plantillaFinal ="";
-// 	 plantillaFinal+=plantillaModal.replace('__nombreDePokemon__',nombre)
-// 		 .replace('__color__',color)
-// 		 .replace('__habitat__',habitat)
-// 		 .replace('__shape__',forma)
-// 		 .replace('__generacion__', generacion)
-// 		 .replace('__imagenPokemon__',imagen);
-// 		 $("#modalPokemon").html(plantillaFinal);
-//  }
-//
-// var obtenerInformacionAdicional = function(){
-// 			 var urlPokemonEspecie=$(this).data('urle').replace('pokemon','pokemon-species');
-// 			 console.log(urlPokemonEspecie);
-// 			 console.log($(this).data("img"));
-// 			 var imagen = $(this).data("img");
-// 			 $.getJSON(urlPokemonEspecie,function(response){
-// 				 obtenerDatos(response,imagen);
-// 			 });
-//
-// };
-//
-// var crearPokemons=function(pokemons) {
-// 	plantillaPokemonFinal = "";
-// 	pokemons.forEach(function (pokemon,a) {
-// 		plantillaPokemonFinal+=plantillaPokemones.replace("__nombreDePokemon__",pokemon.name)
-// 		.replace("__urlImagenPokemon__",imagenesPokemones[a])
-// 		.replace("__url__",pokemon.url)
-// 		.replace("__imgPokemon__",imagenesPokemones[a]);
-// 	});
-//
-// 	$('#pokedex').html(plantillaPokemonFinal);
-// }
+    crearModal(nombrePokemon,pokemonColor,pokemonHabitat,pokemonShape,pokemonGeneracion);
+  });
+
+};
+
+var crearModal = function(nombrePokemon,pokemonColor,pokemonHabitat,pokemonShape,pokemonGeneracion){
+    $("#nombre").text(" " + nombrePokemon);
+    $("#color").text(" " + pokemonColor);
+    $("#habitat").text(" " + pokemonHabitat);
+    $("#shape").text(" " + pokemonShape);
+    $("#generacion").text(" " + pokemonGeneracion);
+};
 
 $(document).ready(cargarPagina);
 
