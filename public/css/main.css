@@ -1,0 +1,20 @@
+.img-pokemon{
+  width:20%;
+}
+.nombre-pokemon{
+  color:blue;
+  font-size: 3vh;
+}
+.nombre-pokemon:hover{
+  color:pink;
+  cursor:pointer;
+  font-size: 5vh;
+}
+.modal-content{
+  text-align: center;
+  color: #fff;
+  font-size: 1vh;
+}
+#boton-modal{
+  color:#fff;
+}
